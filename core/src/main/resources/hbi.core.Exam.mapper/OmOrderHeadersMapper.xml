@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hbi.core.Exam.mapper.OmOrderHeadersMapper">
+<!--    <resultMap id="" type="" extends="com.hand.hap.mapper.StdMapper.STD">
+
+    </resultMap>-->
+    <resultMap id="getAllOrder" type="hbi.core.Exam.dto.OmOrderHeaders">
+        <result column="order_number" property="orderNumber"></result>
+        <result column="company_name" property="companyName"></result>
+        <result column="customer_name" property="customerName"></result>
+        <result column="order_date" property="orderDate"></result>
+        <result column="order_status" property="orderStatus"></result>
+        <result column="UNIT_SELLING_PRICE" property="unitSellingPrice"></result>
+        <result column="ORDERD_QUANTITY" property="orderQuantity"></result>
+        <result column="Money" property="Money"></result>
+        <result column="INVENTORY_ITEM_ID" property="inventoryItemId"></result>
+    </resultMap>
+
+    <select id="findOrderAll" resultMap="getAllOrder">
+        SELECT
+        order_number,
+        company_name,
+        customer_name,
+        order_date,
+        order_status,
+        orderd_quantity,
+        unit_selling_price,
+        orderd_quantity * unit_selling_price Money
+        FROM
+        hap_ar_customers cus,
+        hap_inv_inventory_items item,
+        hap_om_order_headers head,
+        hap_org_companys com,
+        hap_om_order_lines line
+        WHERE
+        com.COMPANY_ID = head.COMPANY_ID
+        AND head.CUSTOMER_ID = cus.CUSTOMER_ID
+        AND line.HEADER_ID=head.HEADER_ID
+        AND item.INVENTORY_ITEM_ID=line.INVENTORY_ITEM_ID
+    </select>
+
+    <select id="findOrderBy" parameterType="hbi.core.Exam.dto.OmOrderHeaders" resultMap="getAllOrder">
+       SELECT
+        order_number,
+        company_name,
+        customer_name,
+        order_date,
+        order_status,
+        orderd_quantity,
+        unit_selling_price,
+        orderd_quantity * unit_selling_price Money
+        FROM
+        hap_ar_customers cus,
+        hap_inv_inventory_items item,
+        hap_om_order_headers head,
+        hap_org_companys com,
+        hap_om_order_lines line
+        where
+        com.COMPANY_ID = head.COMPANY_ID
+        AND head.CUSTOMER_ID = cus.CUSTOMER_ID
+        AND line.HEADER_ID=head.HEADER_ID
+        AND item.INVENTORY_ITEM_ID=line.INVENTORY_ITEM_ID
+
+        <if test="inventoryItemId!= null and inventoryItemId!= '' "> AND item.INVENTORY_ITEM_ID=#{inventoryItemId}</if>
+        <if test="companyId!= null and companyId!= '' "> AND com.company_id=#{companyId}</if>
+        <if test="customerId!= null and customerId!= '' "> AND cus.customer_id=#{customerId}</if>
+            <if test="companyName!= null and companyName!= '' "> AND company_name=#{companyName}</if>
+          <if test="orderNumber!= null and orderNumber!= '' ">  AND  order_number=#{orderNumber}</if>
+           <if test="customerName!= null and customerName!= '' "> AND customer_name=#{customerName}</if>
+          <if test="orderStatus!= null and orderStatus!= '' ">AND  order_status=#{orderStatus}</if>
+        <if test="itemDescription!= null and itemDescription!= '' ">AND    item_description=#{itemDescription}</if>
+
+    </select>
+
+
+</mapper>
